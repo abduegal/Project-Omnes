@@ -4,8 +4,12 @@ angular.module('omnesClientApp', [])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'views/Login.html',
+        controller: 'LoginCtrl'
+      })
+      .when('/chat', {
+        templateUrl: 'views/Chat.html',
+        controller: 'ChatCtrl'
       })
       .otherwise({
         redirectTo: '/'
