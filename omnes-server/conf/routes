@@ -5,5 +5,12 @@
 # Home page
 GET     /                           controllers.Application.index()
 
+# Message API
+
+GET		/messages/:range/:long/:lat					controllers.Messages.get(range: Double, long: Double, lat: Double)
+POST	/messages									controllers.Messages.post()
+PUT		/messages									controllers.Messages.put()
+DELETE	/messages/:id								controllers.Messages.delete(id: Long)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
