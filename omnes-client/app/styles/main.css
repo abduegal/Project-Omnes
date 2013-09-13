@@ -3,6 +3,51 @@
 }
 
 body {
-    background: #fafafa;
+    background: #A2D1E0;
     color: #333;
+}
+
+html, body{
+    height: 100%;
+}
+
+.chatscreen {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 0 20px;
+    position: relative;
+    height: 100%;
+    min-height: 200px;
+    overflow-y: auto;
+    -webkit-flex: 1 1 auto;
+}
+
+.flexcon{
+    display: -webkit-flex;
+    -webkit-flex-flow: column;
+}
+
+dt, dd{
+    border-bottom: 1px solid #efefef;
+}
+
+.max-height{
+    height: 100%;
+}
+
+.input-group-addon{
+    background-color: #fff;
+    border-right-width: 0px;
+}
+
+.chat-input{
+    height: 47px;
+    border-left-width: 0px
+}
+
+.loading{
+    background-image: url("../img/ajax-loader.gif");
+    background-position: center right;
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
 }

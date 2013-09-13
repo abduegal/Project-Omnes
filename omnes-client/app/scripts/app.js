@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('omnesClientApp', [])
+angular.module('omnesClientApp', ['ngCookies'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

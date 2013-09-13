@@ -1,1 +1,31 @@
-<p>This is the Chat view.</p>
+
+<div class="jumbotron max-height">
+  <div class="container max-height flexcon" ng-init="load()">
+
+      <div style="min-height: 85px">
+        <input type="range" class="form-control" min="10" max="1010" step="100" ng-model="range"/>
+        <span class="label label-default ">Range: {{range}} KM</span>
+      </div>
+
+      <div class="chatscreen" id="pollingScreen">
+        <div class="alert alert-danger" ng-show="chatData.error">{{chatData.error}}</div>
+        <dl class="dl-horizontal">
+          <span ng-repeat="message in chatData.messages | orderBy:'timestamp':reverse">
+            <dt>{{message.username}} says: </dt>
+            <dd><b>{{message.error}}</b>{{message.content}}</dd>
+          </span>
+        </dl>
+      </div>
+
+      <div style="margin-top: 15px">
+        <form ng-submit="onSubmit()">
+          <div class="input-group">
+            <span class="input-group-addon"><b>{{user.username}}: </b></span>
+            <input type="text" class="form-control chat-input" ng-model="user.content" placeholder="Your message" ng-class="{loading: loadingInput}">
+            <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px;" hidefocus="true" />
+          </div>
+        </form>
+      </div>
+
+  </div>
+</div>
