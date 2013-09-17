@@ -29,6 +29,9 @@ public class Message {
 
 	@Required
 	private double[] location = new double[2];
+	
+	@Required
+	private long timestamp;
 
 	public void save() {
 		messages().save(this);
@@ -40,9 +43,12 @@ public class Message {
 
 	public static List<Message> findByGeolocation(double lng, double lat, double range) {
 		
+		//convert kilometers to radians
 		double radians = range/6371;
 		
 		String query = "{\"location\" : {$geoWithin : {$centerSphere : [["+lng+" ,"+ lat + "], "+ radians +" ]}}}";
+		
+		
 		
 		return Lists.newArrayList(messages().find(query).as(Message.class));
 		
@@ -54,6 +60,14 @@ public class Message {
 	// getters and setters
 	
 	
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
 
 	public String getContent() {
 		return content;

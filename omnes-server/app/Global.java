@@ -1,16 +1,16 @@
+import models.Message;
 import play.Application;
 import play.GlobalSettings;
-import uk.co.panaxiom.playjongo.PlayJongo;
+
 
 public class Global extends GlobalSettings {
 
 	@Override
-	public void beforeStart(Application arg0) {
-		super.beforeStart(arg0);
+	public void onStart(Application arg0) {
+	
+		super.onStart(arg0);
 		
-				
-		PlayJongo.getCollection("messages").ensureIndex("{location: 2dsphere}");
-		
+		Message.messages().ensureIndex("{\"location\": \"2dsphere\"}");
 	}
 	
 	
