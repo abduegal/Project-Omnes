@@ -64,7 +64,7 @@ angular.module('omnesClientApp')
       $scope.user.location = $scope.currentLocation;
       $scope.user.timestamp = new Date().getTime();
       console.log($scope.user);
-      $http.post('http://192.168.110.104:9000/messages', $scope.user).
+      $http.post('http://omnes.abduegal.cloudbees.net/messages', $scope.user).
         success(function(){
           $scope.chatData.messages.push($scope.user);
           $scope.refreshForm();
@@ -84,7 +84,7 @@ angular.module('omnesClientApp')
     };
 
     $scope.loadData = function(){
-      $http.get('http://192.168.110.104:9000/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1]).
+      $http.get('http://omnes.abduegal.cloudbees.net/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1]).
         success(function(data){
           for(var a in data){
             data[a].timestamp = parseFloat(data[a].timestamp);
