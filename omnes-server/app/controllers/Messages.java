@@ -42,6 +42,7 @@ public class Messages extends Controller {
 
 	public static Result get(double range, double lng, double lat) {
 		AllowOrigin();
+		response.setHeader("Cache-Control", "no-cache");
 		List<Message> result = Message.findByGeolocation(lng, lat, range);
 		
 		
