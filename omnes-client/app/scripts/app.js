@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('omnesClientApp', ['ngCookies'])
+angular.module('omnesClientApp', ['ngCookies', 'luegg.directives'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
