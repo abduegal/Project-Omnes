@@ -10,7 +10,7 @@ public class Application extends Controller {
 	public static void AllowOrigin() {
 		System.out.println(request().getHeader("origin"));
 		response().setHeader("Access-Control-Allow-Origin",
-				"http://localhost:9000");
+				"http://abduegal.github.io");
 		response().setHeader("Access-Control-Allow-Methods",
 				"GET, POST, PUT, DELETE, OPTIONS");
 		response().setHeader("Access-Control-Max-Age", "300");
