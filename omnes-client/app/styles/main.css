@@ -23,6 +23,11 @@ html, body{
     zoom: 0.7;
 }
 
+.extra-margin-right{
+    margin-right: 20px;
+    cursor: pointer;
+}
+
 .dl-horizontal dt {
     float: left;
     width: 200px;
@@ -41,6 +46,10 @@ html, body{
     .chatscreen {
         zoom: 1;
     }
+}
+
+.range{
+
 }
 
 .flexcon{

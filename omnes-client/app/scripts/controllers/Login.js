@@ -5,6 +5,8 @@ angular.module('omnesClientApp')
 
     $scope.questionLabel = 'Enter your username';
 
+    $scope.username = $cookies.username;
+
     /**
      * Username Form submit
      */

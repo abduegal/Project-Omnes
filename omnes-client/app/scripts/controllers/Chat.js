@@ -15,6 +15,8 @@ angular.module('omnesClientApp')
 
     /** Range in KM */
     $scope.range = 10;
+    $scope.maxRange = 300;
+    $scope.rangeIncrement = 10;
 
     /** The refresh rate of the chatbox in miliseconds */
     $scope.refreshRate = 1000;
@@ -23,6 +25,14 @@ angular.module('omnesClientApp')
 
     $scope.error = {};
 
+    /** Enum holding all periods */
+    $scope.periods = [
+      {name: "Last 24 hours", duration: 86400000},
+      {name: "Last Week", duration: 6.048e+8},
+      {name: "Last Month", duration: 2.63e+9}
+    ];
+    $scope.period = $scope.periods[$cookies.period];
+
     /** Watches the range change and verifies that the range will not be less than 10KM */
     $scope.$watch('range', function(newValue){
       if(newValue == 0){
@@ -30,7 +40,14 @@ angular.module('omnesClientApp')
       }
     });
 
-    /** Onload method */
+    /**
+     * Onload method
+     * methods in function are called in the following order:
+     * - Findlocation searches for the user location
+     *   - has a fallback method called findIpLocation to get the location through the IP
+     * - Findlocation will call the loadData method
+     *   - findlocation adds a callback to the loadData that will call the reloadData polling method
+     */
     $scope.load = function(){
       findLocation($scope.loadData);
     };
@@ -40,7 +57,6 @@ angular.module('omnesClientApp')
      */
     $scope.onSubmit = function(){
       $scope.loadingInput = true;
-      $scope.userMessage.timestamp = new Date().getTime();
       $http.post(baseurl + '/messages', $scope.userMessage).
         success(function(){
           $scope.chatData.messages.push($scope.userMessage);
@@ -51,6 +67,11 @@ angular.module('omnesClientApp')
           $scope.chatData.messages.push($scope.userMessage);
           $scope.refreshForm();
         });
+    };
+
+    $scope.changeTimePeriod = function(period){
+      $scope.period = period;
+      $cookies.period = $scope.periods.indexOf(period)+'';
     };
 
     /**
@@ -68,35 +89,38 @@ angular.module('omnesClientApp')
     /**
      * Loads the chat data once
      */
-    $scope.loadData = function(){
-      $http.get(baseurl + '/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1]).
-        success(loadDataOnSuccess).
-        error(function(data, status){
-          $scope.chatData.error = 'Unable to fetch the data, please check your internet connection';
-        });
-    };
-
-    /**
-     * Reloads teh dat and performs polling
-     */
-    $scope.reloadData = function(){
-      $http.get(baseurl + '/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1]).
+    $scope.loadData = function(callback){
+      var lastRequest = new Date().getTime();
+      var fromTimeStamp = (new Date().getTime() - $scope.period.duration);
+      $http.get(baseurl + '/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1] +'/'+ fromTimeStamp).
         success(function(userMessages){
-          loadDataOnSuccess(userMessages);
-          setTimeout($scope.reloadData, $scope.refreshRate);
+          if(userMessages.length == 0 && ($scope.range < $scope.maxRange)){
+            //no data received, increase the range
+            $scope.range += $scope.rangeIncrement;
+            $scope.loadData(callback);
+          }else{
+            $scope.chatData.messages = userMessages;
+            $scope.lastSuccess = lastRequest;
+            callback();
+          }
         }).
         error(function(data, status){
           $scope.chatData.error = 'Unable to fetch the data, please check your internet connection';
         });
     };
 
-    function loadDataOnSuccess(userMessages){
-      $scope.lastSuccessCall = new Date().getTime();
-      for(var index in userMessages){
-        userMessages[index].timestamp = parseFloat(userMessages[index].timestamp);
-      }
-      $scope.chatData.messages = userMessages;
-      $scope.$apply();
+    /**
+     * Reloads teh data and performs polling
+     */
+    $scope.reloadData = function(){
+      var lastRequest = new Date().getTime();
+      var fromTimeStamp = $scope.chatData.messages[$scope.chatData.messages.length - 1].timestamp();
+      $http.get(baseurl + '/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1]).
+        success(function(userMessages){
+          $scope.chatData.messages.push(userMessages);
+          $scope.lastSuccess = lastRequest;
+          setTimeout($srrcope.reloadData, $scope.refreshRate);
+        });
     };
 
     /**
@@ -116,7 +140,7 @@ angular.module('omnesClientApp')
           ];
 
           $scope.$apply();
-          callback();
+          callback($scope.reloadData);
 
         }, function () {
           loadIpLocation(callback);
@@ -140,12 +164,18 @@ angular.module('omnesClientApp')
         ];
 
         $scope.$apply();
-        callback();
+        callback($scope.reloadData);
 
       }else{
         $scope.error.location = "Unable to determine the location";
       }
     };
 
-  });
+    function arrayUnique(){
+      var result = {};
+      for(var i=0; i<myList.length; i++) {
+        newDict[myList[i]['id']] = myList[i]['product']
+      }
+    }
 
+  });
