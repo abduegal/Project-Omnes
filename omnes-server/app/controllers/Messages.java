@@ -30,26 +30,22 @@ public class Messages extends Controller {
 	
 	public static Result put() {
 		
-		
 		return badRequest();
 	}
 
 	public static Result delete(long id) {
 		
-		
 		return badRequest();
 	}
 
-	public static Result get(double range, double lng, double lat) {
-		AllowOrigin();
-		List<Message> result = Message.findByGeolocation(lng, lat, range);
-		
-		
-		
-		return ok(Json.toJson(result));
-				
-			
-	}
+
+    public static Result get(double range, double lng, double lat, long timestamp) {
+        AllowOrigin();
+        List<Message> result = Message.findByGeolocationAndTimeStamp(lng, lat, range, timestamp);
+
+        return ok(Json.toJson(result));
+
+    }
 
 
 }

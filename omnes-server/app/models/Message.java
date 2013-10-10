@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -30,9 +31,6 @@ public class Message {
 	@Required
 	private double[] location = new double[2];
 	
-	@Required
-	private long timestamp;
-
 	public void save() {
 		messages().save(this);
 	}
@@ -41,40 +39,25 @@ public class Message {
 		messages().remove(this.id);
 	}
 
-	public static List<Message> findByGeolocation(double lng, double lat, double range) {
+	public static List<Message> findByGeolocationAndTimeStamp(double lng, double lat, double range, long timestamp) {
 		
 		//convert kilometers to radians
 		double radians = range/6371;
+        //create objectid with the timestamo
+        ObjectId time = new ObjectId(new Date(timestamp));
+
+		String query = "{ $and : [ " +
+                "{\"location\" : {$geoWithin : {$centerSphere : [["+lng+" ,"+ lat + "], "+ radians +" ]}}}," +
+                "{\"_id\" : {$gt : # }}" +
+                "]}";
 		
-		String query = "{\"location\" : {$geoWithin : {$centerSphere : [["+lng+" ,"+ lat + "], "+ radians +" ]}}}";
-		
-		
-		
-		return Lists.newArrayList(messages().find(query).as(Message.class));
-		
-		
-		
+		return Lists.newArrayList(messages().find(query, time).sort("{\"_id\":1}").limit(1000).as(Message.class));
 	}
-	
 
 	// getters and setters
-	
-	
-
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
 
 	public String getContent() {
 		return content;
-	}
-
-	public double[] getLocation() {
-		return location;
 	}
 
 	public void setLocation(double[] location) {
