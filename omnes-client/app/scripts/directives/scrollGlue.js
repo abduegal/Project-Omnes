@@ -13,6 +13,8 @@
     };
   }
 
+  var oldLength = 0;
+
   angular.module('luegg.directives', [])
     .directive('scrollGlue', function(){
       return {
@@ -28,12 +30,12 @@
           }
 
           function shouldActivateAutoScroll(){
-            return el.scrollTop + el.clientHeight == el.scrollHeight;
+            return el.scrollTop + el.clientHeight <= el.scrollHeight;
           }
 
-          scope.$watch(function(){
-            if(ngModel.$viewValue){
-              console.log("change");
+          scope.$watch(function(event){
+            if(ngModel.$viewValue && event.chatData.messages.length > oldLength){
+              oldLength = event.chatData.messages.length;
               scrollToBottom();
             }
           });
