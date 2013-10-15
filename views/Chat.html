@@ -15,7 +15,7 @@
       <div scroll-glue="">
         <div class="alert alert-danger" ng-show="chatData.error">{{chatData.error}}</div>
         <dl class="dl-horizontal">
-          <span ng-repeat="message in chatData.messages | orderBy:'timestamp':reverse">
+          <span ng-repeat="message in chatData.messages">
             <dt>{{message.username}} says: </dt>
             <dd><b>{{message.error}}</b>{{message.content}}</dd>
           </span>
