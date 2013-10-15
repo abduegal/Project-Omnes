@@ -17,7 +17,7 @@
         <div class="alert alert-danger" ng-show="chatData.error">{{chatData.error}}</div>
         <dl class="dl-horizontal">
           <span ng-repeat="message in chatData.messages">
-            <dt>{{message.username}} says: </dt>
+            <dt style="color: #{{getHex(message.username)}};">{{message.username}} says: </dt>
             <dd><b>{{message.error}}</b>{{message.content}}</dd>
           </span>
         </dl>

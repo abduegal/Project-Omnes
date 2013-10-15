@@ -145,6 +145,18 @@ angular.module('omnesClientApp')
     };
 
     /**
+     * Converts the username to a color hex
+     */
+    $scope.getHex = function($username){
+      var hex = '';
+      for(var i=0;i < 3 ;i++) {
+        var charCode = $username.charCodeAt(i) | ' ';
+        hex += ''+$username.charCodeAt(i).toString(16);
+      }
+      return hex;
+    };
+
+    /**
      * Finds the location and runs the callback once the location was found
      * It will attempt to find the location through GPS and it will load the location through IP
      * when the GPS is not available
