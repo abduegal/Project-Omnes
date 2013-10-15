@@ -36,7 +36,7 @@ angular.module('omnesClientApp')
       {name: "Last Week", duration: 6.048e+8},
       {name: "Last Month", duration: 2.63e+9}
     ];
-    $scope.period = $scope.periods[$cookies.period];
+    $scope.period = $scope.periods[$cookies.period | 0];
 
     //Watchers:
 
