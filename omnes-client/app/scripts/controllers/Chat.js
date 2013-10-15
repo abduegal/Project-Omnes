@@ -171,11 +171,5 @@ angular.module('omnesClientApp')
       }
     };
 
-    function arrayUnique(){
-      var result = {};
-      for(var i=0; i<myList.length; i++) {
-        newDict[myList[i]['id']] = myList[i]['product']
-      }
-    }
 
   });
