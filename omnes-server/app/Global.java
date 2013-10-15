@@ -11,6 +11,7 @@ public class Global extends GlobalSettings {
 		super.onStart(arg0);
 		
 		Message.messages().ensureIndex("{\"location\": \"2dsphere\"}");
+        Message.messages().ensureIndex("{\"_id\":1}");
 	}
 	
 	

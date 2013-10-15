@@ -14,4 +14,5 @@ angular.module('omnesClientApp', ['ngCookies', 'luegg.directives'])
       .otherwise({
         redirectTo: '/'
       });
-  });
+  })
+  .value('baseurl', 'http://omnes.abduegal.cloudbees.net');
