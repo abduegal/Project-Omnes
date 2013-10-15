@@ -7,8 +7,8 @@
         <span class="label label-default ">Range: {{range.current}} KM</span>
       </div>
 
-      <div style="min-height: 85px">
-        <span class="label label-default extra-margin-right" ng-repeat="p in periods" ng-click="onChangeTimePeriod(p)" ng-class="{'label-primary': period == p}">
+      <div class="time-period">
+        <span class="label label-default extra-margin-right extra-margin-bottom col-xs-11 col-md-3" ng-repeat="p in periods" ng-click="onChangeTimePeriod(p)" ng-class="{'label-primary': period == p}">
           Show {{p.name}}
         </span>
       </div>
