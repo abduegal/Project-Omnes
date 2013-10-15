@@ -44,6 +44,7 @@ angular.module('omnesClientApp')
     $scope.$watch('range.current', function(newValue){
       if(newValue < $scope.range.minRange){
         $scope.range.current = $scope.range.minRange;
+        $scope.reloadData();
       }
     });
 
@@ -66,6 +67,7 @@ angular.module('omnesClientApp')
      */
     $scope.onSubmit = function(){
       $scope.loadingInput = true;
+      $scope.userMessage.location = $scope.currentLocation;
       BackendService.submit($scope.userMessage,
         function success(){
           $scope.chatData.messages.push($scope.userMessage);
@@ -85,6 +87,7 @@ angular.module('omnesClientApp')
     $scope.onChangeTimePeriod = function(period){
       $scope.period = period;
       $cookies.period = $scope.periods.indexOf(period)+'';
+      $scope.reloadData();
     };
 
     /**
