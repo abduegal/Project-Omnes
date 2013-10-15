@@ -3,12 +3,12 @@
   <div class="container max-height flexcon" ng-init="load()">
 
       <div style="min-height: 85px">
-        <input type="range" class="form-control range" min="0" max="{{maxRange}}" step="{{rangeIncrement}}" ng-model="range"/>
-        <span class="label label-default ">Range: {{range}} KM</span>
+        <input type="range" class="form-control range" min="0" max="{{range.maxRange}}" step="{{range.rangeIncrement}}" ng-model="range.current"/>
+        <span class="label label-default ">Range: {{range.current}} KM</span>
       </div>
 
       <div style="min-height: 85px">
-        <span class="label label-default extra-margin-right" ng-repeat="p in periods" ng-click="changeTimePeriod(p)" ng-class="{'label-primary': period == p}">
+        <span class="label label-default extra-margin-right" ng-repeat="p in periods" ng-click="onChangeTimePeriod(p)" ng-class="{'label-primary': period == p}">
           Show {{p.name}}
         </span>
       </div>

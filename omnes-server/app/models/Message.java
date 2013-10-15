@@ -64,6 +64,10 @@ public class Message {
 		this.location = location;
 	}
 
+    public double[] getLocation(){
+        return location;
+    }
+
 	public void setContent(String content) {
 		this.content = content;
 	}

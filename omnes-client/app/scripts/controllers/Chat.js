@@ -1,25 +1,30 @@
 'use strict';
 
 angular.module('omnesClientApp')
-  .controller('ChatCtrl', function ($scope, $cookies, $http, baseurl) {
+  .controller('ChatCtrl', function ($scope, $cookies, BackendService, baseurl) {
+
+    //Models:
 
     /** Single user message for form use */
-    $scope.userMessage = {};
+    $scope.userMessage = {
+      username : $cookies.username
+    };
 
-    /** Contains all the chat data (inc user messages) */
+    /** Chat data object that contains all the user messsages */
     $scope.chatData = {
       messages: []
-    }
+    };
 
-    $scope.userMessage.username = $cookies.username;
-
-    /** Range in KM */
-    $scope.range = 10;
-    $scope.maxRange = 300;
-    $scope.rangeIncrement = 10;
+    /** Range object that stores the range information in KM*/
+    $scope.range = {
+      current: 10,
+      minRange: 10,
+      maxRange: 300,
+      rangeIncrement: 10
+    };
 
     /** The refresh rate of the chatbox in miliseconds */
-    $scope.refreshRate = 1000;
+    $scope.refreshRate = 2000;
 
     $scope.geolocationAvailable = navigator.geolocation ? true : false;
 
@@ -33,12 +38,16 @@ angular.module('omnesClientApp')
     ];
     $scope.period = $scope.periods[$cookies.period];
 
+    //Watchers:
+
     /** Watches the range change and verifies that the range will not be less than 10KM */
-    $scope.$watch('range', function(newValue){
-      if(newValue == 0){
-        $scope.range = 10;
+    $scope.$watch('range.current', function(newValue){
+      if(newValue < $scope.range.minRange){
+        $scope.range.current = $scope.range.minRange;
       }
     });
+
+    //Events:
 
     /**
      * Onload method
@@ -57,26 +66,30 @@ angular.module('omnesClientApp')
      */
     $scope.onSubmit = function(){
       $scope.loadingInput = true;
-      $http.post(baseurl + '/messages', $scope.userMessage).
-        success(function(){
+      BackendService.submit($scope.userMessage,
+        function success(){
           $scope.chatData.messages.push($scope.userMessage);
           $scope.refreshForm();
-        }).
-        error(function(data, status){
+        },
+        function error(status){
           $scope.userMessage.error = 'unable to send the following message with error ('+status +')';
           $scope.chatData.messages.push($scope.userMessage);
           $scope.refreshForm();
-        });
+        }
+      );
     };
 
-    $scope.changeTimePeriod = function(period){
+    /**
+     * Will be called when the user changes the time period slider
+     */
+    $scope.onChangeTimePeriod = function(period){
       $scope.period = period;
       $cookies.period = $scope.periods.indexOf(period)+'';
     };
 
     /**
      * Form refresh, refreshes the usermessage object
-     * and the loadingIput that was responsible for the progressbar
+     * and the loadingInput that was responsible for the progressbar
      */
     $scope.refreshForm = function(){
       $scope.userMessage = {
@@ -90,37 +103,42 @@ angular.module('omnesClientApp')
      * Loads the chat data once
      */
     $scope.loadData = function(callback){
-      var lastRequest = new Date().getTime();
-      var fromTimeStamp = (new Date().getTime() - $scope.period.duration);
-      $http.get(baseurl + '/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1] +'/'+ fromTimeStamp).
-        success(function(userMessages){
-          if(userMessages.length == 0 && ($scope.range < $scope.maxRange)){
-            //no data received, increase the range
-            $scope.range += $scope.rangeIncrement;
-            $scope.loadData(callback);
-          }else{
-            $scope.chatData.messages = userMessages;
-            $scope.lastSuccess = lastRequest;
-            callback();
-          }
-        }).
-        error(function(data, status){
-          $scope.chatData.error = 'Unable to fetch the data, please check your internet connection';
-        });
+      BackendService.loadData($scope.range.current, $scope.currentLocation, $scope.requestTimeStamp(),
+      function success(userMessages){
+        if($scope.validateLoadData(userMessages, callback)){
+          $scope.chatData.messages = userMessages;
+          callback();
+        }
+      },
+      function error(data, status){
+        $scope.chatData.error = 'Unable to fetch the data, please check your internet connection';
+      });
     };
 
     /**
      * Reloads teh data and performs polling
      */
     $scope.reloadData = function(){
-      var lastRequest = new Date().getTime();
-      var fromTimeStamp = $scope.chatData.messages[$scope.chatData.messages.length - 1].timestamp();
-      $http.get(baseurl + '/messages/'+$scope.range+'/'+ $scope.currentLocation[0] +'/'+$scope.currentLocation[1]).
-        success(function(userMessages){
-          $scope.chatData.messages.push(userMessages);
-          $scope.lastSuccess = lastRequest;
-          setTimeout($srrcope.reloadData, $scope.refreshRate);
-        });
+      BackendService.loadData($scope.range.current, $scope.currentLocation, $scope.requestTimeStamp(),
+        function success(userMessages){
+          $scope.chatData.messages = userMessages;
+          setTimeout($scope.reloadData, $scope.refreshRate);
+        }
+      );
+    };
+
+    $scope.requestTimeStamp = function(){
+      return (new Date().getTime() - $scope.period.duration);
+    };
+
+    $scope.validateLoadData = function(userMessages, callback){
+      if(userMessages.length == 0 && ($scope.range.current < $scope.range.maxRange)){
+        $scope.range.current += $scope.range.rangeIncrement;
+        $scope.loadData(callback);
+        $scope.chatData.error = 'No chat messages found, Increasing range';
+        return false;
+      }
+      return true;
     };
 
     /**
@@ -170,6 +188,5 @@ angular.module('omnesClientApp')
         $scope.error.location = "Unable to determine the location";
       }
     };
-
 
   });
