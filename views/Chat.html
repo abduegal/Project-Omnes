@@ -1,0 +1,36 @@
+<div class="jumbotron max-height">
+  <div class="container max-height flexcon" ng-init="load()">
+
+      <div style="min-height: 85px">
+        <input type="range" class="form-control range" min="0" max="{{range.maxRange}}" step="{{range.rangeIncrement}}" ng-model="range.current">
+        <span class="label label-default">Range: {{range.current}} KM</span>
+      </div>
+
+      <div style="min-height: 85px">
+        <span class="label label-default extra-margin-right" ng-repeat="p in periods" ng-click="onChangeTimePeriod(p)" ng-class="{'label-primary': period == p}">
+          Show {{p.name}}
+        </span>
+      </div>
+
+      <div scroll-glue="">
+        <div class="alert alert-danger" ng-show="chatData.error">{{chatData.error}}</div>
+        <dl class="dl-horizontal">
+          <span ng-repeat="message in chatData.messages | orderBy:'timestamp':reverse">
+            <dt>{{message.username}} says: </dt>
+            <dd><b>{{message.error}}</b>{{message.content}}</dd>
+          </span>
+        </dl>
+      </div>
+
+      <div style="margin-top: 15px">
+        <form ng-submit="onSubmit()">
+          <div class="input-group">
+            <span class="input-group-addon"><b>{{userMessage.username}}: </b></span>
+            <input type="text" class="form-control chat-input" ng-model="userMessage.content" placeholder="Your message" ng-class="{loading: loadingInput}">
+            <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px" hidefocus="true">
+          </div>
+        </form>
+      </div>
+
+  </div>
+</div>

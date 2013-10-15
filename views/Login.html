@@ -1,0 +1,9 @@
+<div class="jumbotron">
+  <div class="container">
+    <h1>{{questionLabel}}</h1>
+    <form ng-submit="onSubmit()">
+      <input type="text" class="form-control input-margin input-lg" ng-model="username">
+      <input type="submit" class="btn btn-primary input-margin btn-lg" ng-disabled="!username" value="Sign up with your username&raquo;">
+    </form>
+  </div>
+</div>
