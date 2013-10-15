@@ -150,8 +150,8 @@ angular.module('omnesClientApp')
     $scope.getHex = function($username){
       var hex = '';
       for(var i=0;i < 3 ;i++) {
-        var charCode = $username.charCodeAt(i) | ' ';
-        hex += ''+$username.charCodeAt(i).toString(16);
+        var charCode = $username.charCodeAt(i) * 1.5 | ' ';
+        hex += ''+charCode.toString(16);
       }
       return hex;
     };
