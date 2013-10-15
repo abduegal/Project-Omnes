@@ -28,6 +28,21 @@ html, body{
     cursor: pointer;
 }
 
+.extra-margin-bottom{
+    margin-bottom: 10px;
+}
+
+.time-period{
+    min-height: 100px;
+}
+
+@media(min-width:992px){
+    .time-period {
+        min-height: 40px;
+    }
+}
+
+
 .dl-horizontal dt {
     float: left;
     width: 200px;
@@ -55,7 +70,10 @@ html, body{
 .flexcon{
     display: -webkit-flex;
     -webkit-flex-flow: column;
-    margin-top: 15px;
+}
+
+.jumbotron{
+    padding: 45px;
 }
 
 dt, dd{
