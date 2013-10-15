@@ -7,7 +7,8 @@ GET     /                           controllers.Application.index()
 
 # Message API
 
-GET		/messages/:range/:long/:lat					controllers.Messages.get(range: Double, long: Double, lat: Double)
+# GET		/messages/:range/:long/:lat					controllers.Messages.get(range: Double, long: Double, lat: Double)
+GET		/messages/:range/:long/:lat/:timestamp		controllers.Messages.get(range: Double, long: Double, lat: Double, timestamp: Long)
 POST	/messages									controllers.Messages.post()
 PUT		/messages									controllers.Messages.put()
 DELETE	/messages/:id								controllers.Messages.delete(id: Long)
